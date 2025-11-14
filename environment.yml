@@ -1,0 +1,21 @@
+name: chexmask
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - scikit-image
+  - scikit-learn
+  - pillow
+  - matplotlib
+  - opencv
+  - pip:
+    - torch
+    - torchvision
+    - albumentations
+    - opencv-python
+    - pytest
+    - flake8
