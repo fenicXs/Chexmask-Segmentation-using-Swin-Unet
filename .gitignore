@@ -1,0 +1,21 @@
+# Track only the curated subset needed for the public repository
+/*
+!.gitignore
+!README.md
+!MIMIC files/
+!MIMIC files/**
+!SwinSegmentation/
+!SwinSegmentation/**
+!VinDR/
+!VinDR/**
+!chexpert/
+chexpert/*
+!chexpert/CheXpert-v1.0_train.csv
+!chexpert/CheXpert-v1.0_valid.csv
+
+# Drop generated Python caches even inside included folders
+__pycache__/
+*.pyc
+
+# Exclude large pre-trained weights; provide download instructions instead
+SwinSegmentation/weights/*.pth
