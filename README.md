@@ -42,6 +42,20 @@ All other upstream assets (e.g., model checkpoints, large raw datasets, visualiz
 - The CheXmask-derived masks remain governed by the CheXmask-Database license. Ensure compliance with the usage restrictions of each underlying dataset (MIMIC-CXR, CheXpert, VinDr-CXR).
 - No raw images are distributed in this repository. Only official metadata tables and curated splits are included.
 
+## Citation
+
+If you use the CheXmask dataset assets included or referenced by this repository, please cite the original release:
+
+```
+@misc{gaggion2023chexmaskPhysioNet,
+   author = {Gaggion, N. and Mosquera, C. and Aineseder, M. and Mansilla, L. and Milone, D. and Ferrante, E.},
+   title = {{CheXmask Database: a large-scale dataset of anatomical segmentation masks for chest x-ray images (version 0.1)}},
+   year = {2023},
+   howpublished = {PhysioNet},
+   note = {https://doi.org/10.13026/dx54-8351}
+}
+```
+
 ## Acknowledgements
 
 This work stands on the shoulders of the CheXmask-Database and Swin-Unet teams. Please cite their publications when publishing results obtained from this workflow.
