@@ -139,6 +139,9 @@ class Trainer:
         self.best_val_dice = 0.0
         self.best_epoch = 0
         self.epochs_without_improvement = 0
+
+        # start epoch (useful when resuming)
+        self.start_epoch = 0
         
         # Visualization data storage
         self.last_vis_data = None
@@ -324,7 +327,7 @@ class Trainer:
         
         start_time = time.time()
         
-        for epoch in range(self.config.NUM_EPOCHS):
+        for epoch in range(self.start_epoch, self.config.NUM_EPOCHS):
             epoch_start = time.time()
             
             # Train
@@ -424,13 +427,31 @@ def main():
     # Resume from checkpoint if specified
     if args.resume:
         print(f"Resuming from checkpoint: {args.resume}")
-        checkpoint = torch.load(args.resume)
+        # Try loading full checkpoint (not weights-only). Newer PyTorch defaults to
+        # weights_only=True which can raise when checkpoint contains non-safe globals.
+        try:
+            checkpoint = torch.load(args.resume, map_location=trainer.device, weights_only=False)
+        except Exception as e:
+            # If the load fails due to restricted globals (common with numpy scalars),
+            # attempt to whitelist the numpy scalar type and retry. Do this only when
+            # you trust the checkpoint source.
+            from torch.serialization import add_safe_globals
+            try:
+                import numpy as _np
+                add_safe_globals([_np._core.multiarray.scalar])
+                checkpoint = torch.load(args.resume, map_location=trainer.device, weights_only=False)
+            except Exception:
+                # Re-raise original exception for debugging
+                raise e
         trainer.model.load_state_dict(checkpoint['model_state_dict'])
         trainer.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         if trainer.scheduler and checkpoint['scheduler_state_dict']:
             trainer.scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
         trainer.history = checkpoint['history']
         trainer.best_val_dice = checkpoint['best_val_dice']
+        # Continue from the next epoch after the checkpointed one
+        trainer.start_epoch = checkpoint.get('epoch', 0) + 1
+        trainer.best_epoch = checkpoint.get('epoch', trainer.best_epoch)
     
     # Train
     trainer.train()
