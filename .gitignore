@@ -2,6 +2,9 @@
 /*
 !.gitignore
 !README.md
+!environment.yml
+!.github/
+!.github/**
 !MIMIC files/
 !MIMIC files/**
 !SwinSegmentation/
